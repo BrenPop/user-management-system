@@ -8,18 +8,16 @@ Please ensure your local docker is running.
 4. Build the sail docker container "vendor/bin/sail up -d"
 5. run "vendor/bin/sail artisan key:generate"
 6. run "vendor/bin/sail npm install"
-7. run cp .env.example .env in your terminal
-8. Update .env file DB_PASSWORD value if needed
-9. Please ensure your .env DB_USERNAME and DB_PASSWORD values are updated to your dockers mysql username and passord values.
-10. Run migrations and seeds "vendor/bin/sail artisan migrate --seed"
-11. If it the first time running the migrations, agree to creating a new database.
-12. run "vendor/bin/sail npm run dev" in your terminal
-13. open a new terminal and cd to your projects root directory, run "vendor/bin/sail artisan queue:work", this will run the queue to send the emails
-14. In your broser open a new tab and type in "localhost", this should take you to the project home page
-15. If you would like to register a new user, click on register and fill in the details.
-16. Otherwise, you may login with the default user: Email - "admin@test.com" | Password - "adminpassword"
-17. To view the emails, you can go to "http://localhost:8025/" in your browser
-18. Go forth and manage users
+7. Update .env file DB_PASSWORD value if needed
+8. Run migrations and seeds "vendor/bin/sail artisan migrate --seed"
+9. If it the first time running the migrations, agree to creating a new database.
+10. run "vendor/bin/sail npm run dev" in your terminal
+11. open a new terminal and cd to your projects root directory, run "vendor/bin/sail artisan queue:work", this will run the queue to send the emails
+12. In your broser open a new tab and type in "localhost", this should take you to the project home page
+13. If you would like to register a new user, click on register and fill in the details.
+14. Otherwise, you may login with the default user: Email - "admin@test.com" | Password - "adminpassword"
+15. To view the emails, you can go to "http://localhost:8025/" in your browser
+16. Go forth and manage users
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
