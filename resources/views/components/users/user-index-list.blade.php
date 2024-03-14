@@ -12,6 +12,11 @@
             <div class="mt-4 flex justify-end">
                 <a href="{{ route('users.show', $user) }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white mr-2">Show</a>
                 <a href="{{ route('users.edit', $user) }}" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white">Edit</a>
+                <form action="{{ route('users.destroy', $user) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="px-4 py-2 ml-2 bg-red-600 hover:bg-red-700 rounded-lg text-white" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+                </form>
             </div>
         </div>
 
