@@ -11,7 +11,7 @@ use App\Services\InterestService;
 use App\Services\LanguageService;
 use App\Services\UserInterestService;
 use App\Services\UserService;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends BaseController
 {
@@ -31,7 +31,6 @@ class UserController extends BaseController
     {
         $users = $this->service->getAll();
 
-        // Return user index view
         return view('users.index', compact('users'));
     }
 
@@ -40,10 +39,14 @@ class UserController extends BaseController
      */
     public function create()
     {
-        $languages = $this->languageService->getLanguagesForDropdown();
-        $interests = $this->interestService->getInterestsForDropdown();
+        $languages = Cache::remember('languages', now()->addDay(), function () {
+            return $this->languageService->getLanguagesForDropdown();
+        });
 
-        // return users create view
+        $interests = Cache::remember('interests', now()->addDay(), function () {
+            return $this->interestService->getInterestsForDropdown();
+        });
+
         return view('users.create', compact('languages', 'interests'));
     }
 
@@ -84,8 +87,13 @@ class UserController extends BaseController
      */
     public function show(string $id)
     {
-        $languages = $this->languageService->getLanguagesForDropdown();
-        $interests = $this->interestService->getInterestsForDropdown();
+        $languages = Cache::remember('languages', now()->addDay(), function () {
+            return $this->languageService->getLanguagesForDropdown();
+        });
+
+        $interests = Cache::remember('interests', now()->addDay(), function () {
+            return $this->interestService->getInterestsForDropdown();
+        });
 
         $user = $this->service->getById($id);
         $userInterestIds = $this->userInterestService->getUserInterests($user->id);
@@ -98,8 +106,13 @@ class UserController extends BaseController
      */
     public function edit(string $id)
     {
-        $languages = $this->languageService->getLanguagesForDropdown();
-        $interests = $this->interestService->getInterestsForDropdown();
+        $languages = Cache::remember('languages', now()->addDay(), function () {
+            return $this->languageService->getLanguagesForDropdown();
+        });
+
+        $interests = Cache::remember('interests', now()->addDay(), function () {
+            return $this->interestService->getInterestsForDropdown();
+        });
 
         $user = $this->service->getById($id);
         $userInterestIds = $this->userInterestService->getUserInterests($user->id);
