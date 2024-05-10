@@ -11,17 +11,17 @@ use App\Services\InterestService;
 use App\Services\LanguageService;
 use App\Services\UserInterestService;
 use App\Services\UserService;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class UserController extends BaseController
 {
     public function __construct(
-        UserService $userService,
+        protected UserService $userService,
         protected LanguageService $languageService,
         protected InterestService $interestService,
         protected UserInterestService $userInterestService
     ) {
-        parent::__construct($userService);
+        $this->service = $userService;
     }
 
     /**
@@ -39,13 +39,8 @@ class UserController extends BaseController
      */
     public function create()
     {
-        $languages = Cache::remember('languages', now()->addDay(), function () {
-            return $this->languageService->getLanguagesForDropdown();
-        });
-
-        $interests = Cache::remember('interests', now()->addDay(), function () {
-            return $this->interestService->getInterestsForDropdown();
-        });
+        $languages = $this->languageService->getLanguagesForDropdown();
+        $interests = $this->interestService->getInterestsForDropdown();
 
         return view('users.create', compact('languages', 'interests'));
     }
@@ -87,13 +82,8 @@ class UserController extends BaseController
      */
     public function show(string $id)
     {
-        $languages = Cache::remember('languages', now()->addDay(), function () {
-            return $this->languageService->getLanguagesForDropdown();
-        });
-
-        $interests = Cache::remember('interests', now()->addDay(), function () {
-            return $this->interestService->getInterestsForDropdown();
-        });
+        $languages = $this->languageService->getLanguagesForDropdown();
+        $interests = $this->interestService->getInterestsForDropdown();
 
         $user = $this->service->getById($id);
         $userInterestIds = $this->userInterestService->getUserInterests($user->id);
@@ -106,13 +96,8 @@ class UserController extends BaseController
      */
     public function edit(string $id)
     {
-        $languages = Cache::remember('languages', now()->addDay(), function () {
-            return $this->languageService->getLanguagesForDropdown();
-        });
-
-        $interests = Cache::remember('interests', now()->addDay(), function () {
-            return $this->interestService->getInterestsForDropdown();
-        });
+        $languages = $this->languageService->getLanguagesForDropdown();
+        $interests = $this->interestService->getInterestsForDropdown();
 
         $user = $this->service->getById($id);
         $userInterestIds = $this->userInterestService->getUserInterests($user->id);
@@ -157,6 +142,12 @@ class UserController extends BaseController
     public function destroy(string $id)
     {
         try {
+            $user = $this->service->getById($id);
+
+            if (Str::contains($user->email, "admin")) {
+                return redirect()->back()->with('error', "Cannot delete an admin user");
+            }
+
             $this->service->delete($id);
 
             return redirect()->route('users.index')->with('success', 'User deleted successfully');

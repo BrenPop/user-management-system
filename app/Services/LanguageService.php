@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Language;
 use App\Services\Interfaces\ILanguageService;
+use Illuminate\Support\Facades\Cache;
 
 class LanguageService extends BaseService implements ILanguageService
 {
@@ -14,6 +15,8 @@ class LanguageService extends BaseService implements ILanguageService
 
     public function getLanguagesForDropdown()
     {
-        return $this->model->pluck('name', 'id')->toArray();
+        return Cache::remember('languages', now()->addDay(), function () {
+            return $this->model->pluck('name', 'id')->toArray();
+        });
     }
 }
